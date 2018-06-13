@@ -12,11 +12,8 @@ setup(
         'click~=6.7',
         'python-terraform~=0.10',
         'tinyshar>=0.10',
-        'anygen==0.0.0',
+        'anygen',
         'attrdict>=2,<3',
         'ansimarkup~=1.4'
-    ],
-    dependency_links=[
-        'git+https://github.com/kshpytsya/anygen#egg=anygen-0.0.0'
     ]
 )
