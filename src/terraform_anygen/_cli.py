@@ -32,6 +32,11 @@ def opts_obj(f):
     return update_wrapper(wrapper, f)
 
 
+def dump_json(path, data):
+    with path.open(mode='w') as f:
+        json.dump(data, f, indent=4, sort_keys=True)
+
+
 @click.group()
 @click.option('-y', is_flag=True)
 @click.option('--state', type=click.Path(file_okay=False))
@@ -147,14 +152,12 @@ def up(ctx, opts):
     if tf_backend is not None:
         main_tf_data += {"terraform": {"backend": tf_backend}}
 
-    with ctx.obj.terraform_dir.joinpath("main.tf").open(mode='w') as f:
-        json.dump(main_tf_data, f, indent=4)
+    dump_json(ctx.obj.terraform_dir.joinpath("main.tf"), main_tf_data)
 
     body_module_dir = ctx.obj.terraform_dir / "body"
     body_module_dir.mkdir(exist_ok=True)
 
-    with body_module_dir.joinpath("main.tf.json").open(mode='w') as f:
-        json.dump(tf_data, f, indent=4)
+    dump_json(body_module_dir.joinpath("main.tf.json"), tf_data)
 
     checked_tf(
         ctx.obj.terraform.init(
