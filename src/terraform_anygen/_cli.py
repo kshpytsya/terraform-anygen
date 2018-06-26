@@ -39,6 +39,7 @@ def dump_json(path, data):
 
 @click.group()
 @click.option('-y', is_flag=True)
+@click.option('--jobs', '-j', type=int, default=10)
 @click.option('--state', type=click.Path(file_okay=False))
 @click.pass_context
 @opts_obj
@@ -48,6 +49,7 @@ def main(ctx, opts):
 
     ctx.obj = attrdict.AttrMap()
     ctx.obj.yes = opts.y
+    ctx.obj.jobs = opts.jobs
     ctx.obj.state_dir = pathlib.Path(opts.state or '.terraform-anygen')
     ctx.obj.terraform_dir = ctx.obj.state_dir / 'terraform'
     ctx.obj.out_dir = ctx.obj.state_dir / 'out'
@@ -170,6 +172,7 @@ def up(ctx, opts):
         ctx.obj.terraform.apply(
             capture_output=False,
             skip_plan=ctx.obj.yes,
+            parallelism=ctx.obj.jobs,
             refresh=opts.refresh,
             no_color=python_terraform.IsNotFlagged
         ),
@@ -250,6 +253,7 @@ def down(ctx, opts):
         ctx.obj.terraform.destroy(
             capture_output=False,
             force=ctx.obj.yes,
+            parallelism=ctx.obj.jobs,
             no_color=python_terraform.IsNotFlagged,
             refresh=opts.refresh
         ),
