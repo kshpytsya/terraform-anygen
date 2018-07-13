@@ -133,7 +133,7 @@ def up(ctx, opts):
             "debug_dump": str(ctx.obj.debug_dir.joinpath('anygen.' + k).absolute())
         }
         for k2, v2 in v.get("args", {}).items():
-            query["arg_" + k2] = '${jsonencode("%s")}' % v2
+            query["arg_" + k2] = '${jsonencode("%s")}' % v2.replace('\\', '\\\\').replace('"', '\\"')
 
         data_external[k] = {
             "program": [sys.executable, "-m", "terraform_anygen._gen"],
