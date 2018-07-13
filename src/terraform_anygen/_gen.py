@@ -69,14 +69,18 @@ def main():
                 dest = dest / source_name
 
             tags = file_desc.get("tags", [])
+            if isinstance(tags, str):
+                tags = [tags]
 
             shar.add_file(dest.as_posix(), content, tags=tags)
 
         for file_desc in shar_desc.pop("files", []):
             add_file(file_desc)
 
-        for chmod_tag, chmod_mode in shar_desc.pop("chmod", {}):
-            shar.add_post("chmod %s %s" % (chmod_mode, shar.files_by_tag_as_shell_str(chmod_tag)))
+        for chmod_tag, chmod_mode in shar_desc.pop("chmod", {}).items():
+            tagged_files = shar.files_by_tag_as_shell_str(chmod_tag)
+            if tagged_files:
+                shar.add_post("chmod %s %s" % (chmod_mode, tagged_files))
 
         for i in shar_desc.pop("pre", []):
             shar.add_pre(i)
