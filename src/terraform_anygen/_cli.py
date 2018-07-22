@@ -41,6 +41,7 @@ def dump_json(path, data):
 @click.option('-y', is_flag=True)
 @click.option('--jobs', '-j', type=int, default=10)
 @click.option('--state', type=click.Path(file_okay=False))
+@click.option('--target', multiple=True)
 @click.pass_context
 @opts_obj
 def main(ctx, opts):
@@ -68,7 +69,10 @@ def main(ctx, opts):
         shutil.rmtree(str(ctx.obj.debug_dir))
     ctx.obj.debug_dir.mkdir()
 
-    ctx.obj.terraform = python_terraform.Terraform(working_dir=ctx.obj.terraform_dir)
+    ctx.obj.terraform = python_terraform.Terraform(
+        working_dir=ctx.obj.terraform_dir,
+        targets=['module.body.' + i for i in opts.target]
+    )
 
 
 class InputParamType(click.ParamType):
