@@ -49,7 +49,7 @@ def main(ctx, opts):
         raise click.ClickException("cannot find 'terraform' executable on PATH")
 
     ctx.obj = attrdict.AttrMap()
-    ctx.obj.yes = opts.y
+    ctx.obj.yes = opts.yes
     ctx.obj.jobs = opts.jobs
     ctx.obj.state_dir = pathlib.Path(opts.state or '.terraform-anygen')
     ctx.obj.terraform_dir = ctx.obj.state_dir / 'terraform'
