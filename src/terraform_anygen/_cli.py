@@ -38,7 +38,7 @@ def dump_json(path, data):
 
 
 @click.group()
-@click.option('-y', is_flag=True)
+@click.option('--yes', '-y', is_flag=True)
 @click.option('--jobs', '-j', type=int, default=10)
 @click.option('--state', type=click.Path(file_okay=False))
 @click.option('--target', multiple=True)
@@ -86,7 +86,8 @@ class InputParamType(click.ParamType):
                     return json.load(f)
 
             if value.endswith(('.yml', '.yaml')):
-                return ruamel.yaml.load(value)
+                with open(value) as f:
+                    return ruamel.yaml.safe_load(f)
 
             self.fail("don't know how to read %s" % value)
 
