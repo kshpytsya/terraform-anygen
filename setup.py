@@ -9,7 +9,7 @@ setup(
     package_dir={"": "src"},
     entry_points={"console_scripts": ["terraform-anygen = terraform_anygen._cli:main"]},
     install_requires=[
-        'click~=6.7',
+        'click>=7.0,<8',
         'python-terraform~=0.10',
         'tinyshar>=0.10',
         'anygen',
