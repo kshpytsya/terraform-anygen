@@ -230,7 +230,14 @@ def main(**kwargs):
 
                 expected_outfiles.discard(k)
 
-                file_path = out_dir / k
+                rel_path = pathlib.Path(k)
+                if rel_path.is_absolute() or '..' in rel_path.parts or not rel_path.parts:
+                    raise click.ClickException(
+                        "output file path cannot be absolute, contain '..', or be empty: {}".format(rel_path)
+                    )
+
+                file_path = out_dir / rel_path
+                file_path.parent.mkdir(parents=True, exist_ok=True)
                 file_path.write_text(v["content"])
 
                 file_mode = v.get("chmod", None)
